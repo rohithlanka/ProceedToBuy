@@ -22,36 +22,53 @@ namespace ProceedToBuyService.Repository
             };
 
             Clist = new List<Cart>() { 
-            new Cart { CartId=1 ,ProductId=1 ,Zipcode=533048 ,DeliveryDate = DateTime.Parse("2021-09-03") ,VendorObj=vendor} ,
-            new Cart {CartId=2  ,ProductId=1 ,Zipcode=533296 ,DeliveryDate = DateTime.Parse("2020-12-28") ,VendorObj=vendor} ,
-            new Cart {CartId=3  ,ProductId=2 ,Zipcode=533047 ,DeliveryDate = DateTime.Parse("2021-01-05") ,VendorObj=vendor} ,
-            new Cart {CartId=2  ,ProductId=2 ,Zipcode=533207 ,DeliveryDate = DateTime.Parse("2021-02-15") ,VendorObj=vendor}
+            new Cart { CartId=1 ,CustomerId=1,ProductId=1 ,Zipcode=533048 ,DeliveryDate = DateTime.Parse("2021-09-03") ,VendorObj=vendor} ,
+            new Cart {CartId=2  ,CustomerId=2,ProductId=1 ,Zipcode=533296 ,DeliveryDate = DateTime.Parse("2020-12-28") ,VendorObj=vendor} ,
+            new Cart {CartId=3  ,CustomerId=3,ProductId=2 ,Zipcode=533047 ,DeliveryDate = DateTime.Parse("2021-01-05") ,VendorObj=vendor} ,
+            new Cart {CartId=2  ,CustomerId=4,ProductId=2 ,Zipcode=533207 ,DeliveryDate = DateTime.Parse("2021-02-15") ,VendorObj=vendor}
 
             };
         }
-        //public Cart addToCart(Cart entity)
-        //{
-        //    try
-        //    {
-        //        Clist.Add(entity);
-        //        _log4net.Info("Item Added to Cart");
-        //        return Clist;
-        //    }
-        //    catch
-        //    {
-        //        _log4net.Info("Item not Added to Cart");
-        //        return null;
-        //    }
-           
-        //}
-
-        public IEnumerable<Wishlist> addToWishlist(Wishlist entity)
+        public CartDto addToCart(CartDto entity)
         {
             try
             {
-                Wlist.Add(entity);
+                Cart newcart = new Cart()
+                {
+                    CartId = entity.CartId,
+                    CustomerId = entity.CustomerId,
+                    ProductId = entity.ProductId,
+                    DeliveryDate = entity.DeliveryDate,
+                    VendorObj = entity.VendorObj,
+
+                };
+                Clist.Add(newcart);
+                _log4net.Info("Item Added to Cart");
+                return entity;
+            }
+            catch
+            {
+                _log4net.Info("Item not Added to Cart");
+                return null;
+            }
+
+        }
+
+    public WishlistDto addToWishlist(WishlistDto entity)
+        {
+            try
+            {
+                Wishlist nwl = new Wishlist()
+                {
+                    VendorId=entity.VendorId,
+                    CustomerId=entity.CustomerId,
+                    ProductId=entity.ProductId,
+                    Quantity=entity.Quantity,
+                    DateAddedToWishlist=entity.DateAddedToWishlist,
+                };
+                Wlist.Add(nwl);
                 _log4net.Info("Item Added to Wishlist");
-                return Wlist;
+                return entity;
             }
             catch
             {

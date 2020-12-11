@@ -8,7 +8,7 @@ namespace ProceedToBuyService.Repository
 {
     public interface IProceedToBuyRepository
     {
-        public IEnumerable<Wishlist> addToWishlist(Wishlist entity);
-       // public Cart addToCart(Cart entity);
+        public WishlistDto addToWishlist(WishlistDto entity);
+        public CartDto addToCart(CartDto entity);
     }
 }

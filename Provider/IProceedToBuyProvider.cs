@@ -10,6 +10,7 @@ namespace ProceedToBuyService.Provider
     {
         public Task<CartDto> GetSupply(int prodid,int cutsid,int zipcode,DateTime delidt);
         //public IEnumerable<Cart> Add(Cart entity);
-        public bool Add(Wishlist entity);
+        //public bool Add(Wishlist entity);
+        public Task<WishlistDto> Wish(int custid, int prodid);
     }
 }

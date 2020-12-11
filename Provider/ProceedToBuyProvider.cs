@@ -19,40 +19,30 @@ namespace ProceedToBuyService.Provider
         {
             proceedToBuyRepository = repo;
         }
-        public bool Add(Wishlist entity)
+        public async Task<WishlistDto> Wish(int custid,int prodid)
         {
-            try
+            Random unqid = new Random();
+            WishlistDto wl = new WishlistDto()
             {
-                _log4net.Info("Add To Wishlist Repository initiated");
-                var result = proceedToBuyRepository.addToWishlist(entity);
-                if(result ==null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            catch
-            {
-                _log4net.Info("Error in calling Wishlist Repository");
-                return false;
-            }
+                VendorId = unqid.Next(1, 5),
+                CustomerId=custid,
+                ProductId = prodid,
+                Quantity=1,
+                DateAddedToWishlist=DateTime.Now.Date
                 
 
+            };
+            WishlistDto wl1 = proceedToBuyRepository.addToWishlist(wl);
+            return wl;
         }
-        //  return proceedToBuyRepository.addToCart(entity);
+       
 
         public async Task<CartDto> GetSupply(int prodid,int custid,int zipcode,DateTime delidt)
         {
 
             var client = new HttpClient();
             
-                //client.BaseAddress = new Uri(Baseurl);
-                //client.DefaultRequestHeaders.Accept.Clear();
-                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                //HttpResponseMessage response = await client.GetAsync("api/Vendor/GetVendorDetails/"+ProductId);
+                
                 client.BaseAddress = new Uri("https://localhost:44388/");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -63,26 +53,42 @@ namespace ProceedToBuyService.Provider
 
                     List<VendorDto> vendorsdto = JsonConvert.DeserializeObject<List<VendorDto>>(apiResponse);
             int max = 0;
-            VendorDto tagged=vendorsdto.FirstOrDefault();
+            VendorDto taggeddto=vendorsdto.FirstOrDefault();
+           
             foreach(VendorDto v in vendorsdto)
             {
                 if(v.Rating>=max)
                 {
                     max = v.Rating;
-                    tagged = v;
+                    taggeddto = v;
                 }
             }
-            Random unid = new Random();
-            CartDto finalcart = new CartDto()
+            Vendor taggedvendor = new Vendor()
             {
-                CartId = unid.Next(1, 999),
-                CustomerId = custid,
-                ProductId = prodid,
-                Zipcode = zipcode,
-                DeliveryDate = delidt,
-                VendorObj = tagged,
+                VendorId = taggeddto.VendorId,
+                VendorName = taggeddto.VendorName,
+                Rating = taggeddto.Rating,
+                DeliveryCharge = taggeddto.DeliveryCharge
             };
-            return finalcart;
+            CartDto fcart = new CartDto();
+            if(taggeddto!=null)
+            {
+                Random unid = new Random();
+                CartDto finalcart = new CartDto()
+                {
+                    CartId = unid.Next(1, 999),
+                    CustomerId = custid,
+                    ProductId = prodid,
+                    Zipcode = zipcode,
+                    DeliveryDate = delidt,
+                    VendorObj = taggedvendor,
+                };
+                CartDto ficart=proceedToBuyRepository.addToCart(finalcart);
+                return ficart;
+
+            }
+            
+            return fcart;
                 
             
 
