@@ -17,3 +17,4 @@ On next runs you can simply use - docker-compose up to start service or
 docker-compose up --build to rebuild service
 docker-compose down to shutdown service.
 Now enter a UI to check at http://localhost:8080, that all run successfully. It must contain a dag file:
+hi there edited at 3pm
